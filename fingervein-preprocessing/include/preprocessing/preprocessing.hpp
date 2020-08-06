@@ -5,8 +5,8 @@ namespace fingervein {
 
 class Preprocessing {
     public:
-        Preprocessing();
-        ~Preprocessing();
+        Preprocessing() = default;
+        ~Preprocessing() = default;
 };
 
 }
