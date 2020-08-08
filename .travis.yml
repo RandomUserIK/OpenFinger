@@ -1,0 +1,34 @@
+language: cpp
+
+compiler: gcc
+
+os: linux
+
+dist: bionic
+
+addons:
+  apt:
+    packages:
+      - cmake
+      - qtbase5-dev
+      - qtbase5-dev-tools
+      - qt5-default
+      - libcuda-10.2-1
+      - libopencv-dev
+      - libarrayfire-unified-dev
+      - libboost-all-dev
+
+script:
+  - cd ./fingervein-preprocessing/ && mkdir build && cd build && cmake .. && make
+  - cd ./fingervein-extraction/ && mkdir build && cd build && cmake .. && make
+  - cd ./fingervein-matching/ && mkdir build && cd build && cmake .. && make
+
+branches:
+  only:
+    - dev
+    - /^feature/*$\
+    - /^refactor/*$\
+    - /^fix/*$\
+
+notifications:
+  email: false
