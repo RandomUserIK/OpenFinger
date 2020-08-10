@@ -1,0 +1,11 @@
+[submodule "fingervein-preprocessing/external/Catch2"]
+	path = fingervein-preprocessing/external/Catch2
+	url = git@github.com:catchorg/Catch2.git
+
+[submodule "fingervein-extraction/external/Catch2"]
+	path = fingervein-extraction/external/Catch2
+	url = git@github.com:catchorg/Catch2.git
+
+[submodule "fingervein-matching/external/Catch2"]
+	path = fingervein-matching/external/Catch2
+	url = git@github.com:catchorg/Catch2.git

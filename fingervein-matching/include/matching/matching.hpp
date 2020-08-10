@@ -6,7 +6,6 @@ namespace fingervein {
 class Matching {
     public:
         Matching() = default;
-        ~Matching() = default;
 };
 
 }

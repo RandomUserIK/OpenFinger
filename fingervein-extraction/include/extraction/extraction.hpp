@@ -6,7 +6,6 @@ namespace fingervein {
 class Extraction {
     public:
         Extraction() = default;
-        ~Extraction() = default;
 };
 
 }

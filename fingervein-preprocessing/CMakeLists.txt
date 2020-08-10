@@ -13,6 +13,13 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+option(
+        FV_PREPROCESSING_LIB_ENABLE_TESTS
+        "Specifies if unit tests should be built and added to ctest"
+        OFF
+)
+set(ENABLE_TESTS ${FV_PREPROCESSING_LIB_ENABLE_TESTS})
+
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Gui REQUIRED)
 find_package(ArrayFire REQUIRED)
@@ -27,7 +34,7 @@ if (MSVC)
     target_compile_options(
             projectwarnings
             INTERFACE
-            /W4
+            /W4                         # all reasonable warnings
     )
 else()
     target_compile_options(
@@ -79,3 +86,29 @@ set_target_properties(fvpreprocessinglib
         PREFIX ""
         OUTPUT_NAME "fvpreprocessinglib"
 )
+
+if (ENABLE_TESTS)
+
+    set(FV_PREPROCESSING_TEST_SOURCES
+            test/main.cpp
+    )
+    add_subdirectory(external/Catch2)
+    add_executable(unittests ${FV_PREPROCESSING_TEST_SOURCES})
+
+    target_include_directories(unittests PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/)
+    target_include_directories(unittests PUBLIC ${ArrayFire_INCLUDE_DIRS})
+    target_include_directories(unittests PUBLIC ${OpenCV_INCLUDE_DIRS})
+
+    target_link_libraries(unittests fvpreprocessinglib
+                                    Catch2::Catch2
+                                    ${OpenCV_LIBS}
+                                    ${ArrayFire_LIBRARIES})
+
+    include(CTest)
+    enable_testing()
+
+    list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external/Catch2/contrib")
+    include(Catch)
+    catch_discover_tests(unittests)
+
+endif()

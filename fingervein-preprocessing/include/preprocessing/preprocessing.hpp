@@ -6,7 +6,8 @@ namespace fingervein {
 class Preprocessing {
     public:
         Preprocessing() = default;
-        ~Preprocessing() = default;
+
+        double addition(double, double) noexcept;
 };
 
 }
