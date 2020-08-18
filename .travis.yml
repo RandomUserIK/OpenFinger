@@ -16,6 +16,7 @@ addons:
       - libopencv-dev
       - libarrayfire-unified-dev
       - libboost-all-dev
+      - doctest-dev
 
 script:
   ./build.sh

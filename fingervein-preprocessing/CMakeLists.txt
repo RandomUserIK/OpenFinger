@@ -3,8 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 project(OpenFinger
         VERSION 0.1.0
         LANGUAGES CXX
-        DESCRIPTION "OpenFinger Finger Vein Preprocessing Module"
-)
+        DESCRIPTION "OpenFinger Finger Vein Preprocessing Module")
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC ON)
@@ -13,8 +12,16 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+option(
+        FV_PREPROCESSING_LIB_ENABLE_TESTS
+        "Specifies if unit tests should be built and added to CTest"
+        ON
+)
+set(ENABLE_TESTS ${FV_PREPROCESSING_LIB_ENABLE_TESTS})
+
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Gui REQUIRED)
+find_package(doctest REQUIRED)
 find_package(ArrayFire REQUIRED)
 find_package(OpenCV REQUIRED COMPONENTS opencv_core
                                         opencv_imgproc
@@ -79,3 +86,24 @@ set_target_properties(fvpreprocessinglib
         PREFIX ""
         OUTPUT_NAME "fvpreprocessinglib"
 )
+
+if (ENABLE_TESTS)
+
+    set(FV_PREPROCESSING_TEST_SOURCES
+            test/main.cpp
+            test/preprocessing/preprocessing.cpp
+        )
+
+    add_executable(unittests ${FV_PREPROCESSING_TEST_SOURCES})
+    target_compile_features(unittests PRIVATE cxx_std_17)
+    target_link_libraries(unittests fvpreprocessinglib
+                                    doctest::doctest
+                                    Qt5::Core
+                                    Qt5::Gui
+                                    ${OpenCV_LIBS}
+                                    ${ArrayFire_LIBRARIES})
+
+    include(CTest)
+    enable_testing()
+
+endif()
