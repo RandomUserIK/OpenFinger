@@ -9,15 +9,16 @@ Written by Waleed Abdulla
 ------------------------------------------------------------
 """
 
-import os
-import sys
-import json
 import datetime
+import json
 import numpy as np
+import os
 import skimage.draw
+import sys
+import tensorflow as tf
 
 # Root directory of the project
-ROOT_DIR = os.path.abspath("../../")
+ROOT_DIR = os.path.abspath("./")
 
 # Import Mask RCNN
 sys.path.append(ROOT_DIR)  # To find local version of the library
@@ -30,6 +31,7 @@ COCO_WEIGHTS_PATH = os.path.join(ROOT_DIR, "mask_rcnn_coco.h5")
 # Directory to save logs and model checkpoints, if not provided
 # through the command line argument --logs
 DEFAULT_LOGS_DIR = os.path.join(ROOT_DIR, "logs")
+
 
 ############################################################
 #  Configurations
@@ -107,9 +109,9 @@ class RoiDataset(utils.Dataset):
             if type(a['regions']) is dict:
                 polygons = [r['shape_attributes'] for r in a['regions'].values()]
             else:
-                polygons = [r['shape_attributes'] for r in a['regions']] 
+                polygons = [r['shape_attributes'] for r in a['regions']]
 
-            # load_mask() needs the image size to convert polygons to masks.
+                # load_mask() needs the image size to convert polygons to masks.
             # Unfortunately, VIA doesn't include it in JSON, so we must read
             # the image. This is only managable since the dataset is tiny.
             image_path = os.path.join(dataset_dir, a['filename'])
@@ -175,9 +177,10 @@ def train(model):
     # COCO trained weights, we don't need to train too long. Also,
     # no need to train all layers, just the heads should do it.
     print("Training network heads")
+
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
-                epochs=30,
+                epochs=50,
                 layers='heads')
 
 
@@ -258,6 +261,9 @@ def detect_and_color_splash(model, image_path=None, video_path=None):
 ############################################################
 
 if __name__ == '__main__':
+    gpus = tf.config.experimental.list_physical_devices('GPU')
+    tf.config.experimental.set_memory_growth(gpus[0], True)
+
     import argparse
 
     # Parse command line arguments
@@ -265,13 +271,14 @@ if __name__ == '__main__':
         description='Train Mask R-CNN to detect ROI.')
     parser.add_argument("command",
                         metavar="<command>",
-                        help="'train' or 'splash'")
+                        help="'train' or 'splash'", nargs='?', default='train')
     parser.add_argument('--dataset', required=False,
                         metavar="/path/to/roi/dataset/",
-                        help='Directory of the ROI dataset')
-    parser.add_argument('--weights', required=True,
+                        help='Directory of the ROI dataset',
+                        default='/home/xkovac/Documents/FV Databases/All Images/dataset')
+    parser.add_argument('--weights', required=False,
                         metavar="/path/to/weights.h5",
-                        help="Path to weights .h5 file or 'coco'")
+                        help="Path to weights .h5 file or 'coco'", default='coco')
     parser.add_argument('--logs', required=False,
                         default=DEFAULT_LOGS_DIR,
                         metavar="/path/to/logs/",
@@ -284,12 +291,14 @@ if __name__ == '__main__':
                         help='Video to apply the color splash effect on')
     args = parser.parse_args()
 
+    print(args)
+
     # Validate arguments
     if args.command == "train":
         assert args.dataset, "Argument --dataset is required for training"
     elif args.command == "splash":
-        assert args.image or args.video,\
-               "Provide --image or --video to apply color splash"
+        assert args.image or args.video, \
+            "Provide --image or --video to apply color splash"
 
     print("Weights: ", args.weights)
     print("Dataset: ", args.dataset)
@@ -304,6 +313,8 @@ if __name__ == '__main__':
             # one image at a time. Batch size = GPU_COUNT * IMAGES_PER_GPU
             GPU_COUNT = 1
             IMAGES_PER_GPU = 1
+
+
         config = InferenceConfig()
     config.display()
 
