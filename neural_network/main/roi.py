@@ -11,10 +11,11 @@ Written by Waleed Abdulla
 
 import datetime
 import json
-import numpy as np
 import os
-import skimage.draw
 import sys
+
+import numpy as np
+import skimage.draw
 import tensorflow as tf
 
 # Root directory of the project
@@ -31,7 +32,6 @@ COCO_WEIGHTS_PATH = os.path.join(ROOT_DIR, "mask_rcnn_coco.h5")
 # Directory to save logs and model checkpoints, if not provided
 # through the command line argument --logs
 DEFAULT_LOGS_DIR = os.path.join(ROOT_DIR, "logs")
-
 
 ############################################################
 #  Configurations
@@ -274,8 +274,7 @@ if __name__ == '__main__':
                         help="'train' or 'splash'", nargs='?', default='train')
     parser.add_argument('--dataset', required=False,
                         metavar="/path/to/roi/dataset/",
-                        help='Directory of the ROI dataset',
-                        default='/home/xkovac/Documents/FV Databases/All Images/dataset')
+                        help='Directory of the ROI dataset', default='/home/xkovac/Documents/FV Databases/All Images/dataset')
     parser.add_argument('--weights', required=False,
                         metavar="/path/to/weights.h5",
                         help="Path to weights .h5 file or 'coco'", default='coco')

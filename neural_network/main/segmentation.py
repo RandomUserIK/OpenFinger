@@ -4,6 +4,7 @@ import logging
 import tensorflow as tf
 import mrcnn.model as mrcnn_model
 import roi
+import cv2
 
 ROOT_DIR = os.getcwd()
 MODEL_DIR = os.path.join(ROOT_DIR, 'logs/')
@@ -39,7 +40,8 @@ class Segmentation:
 
     def load_weights(self) -> None:
         # logging.info('Loading weights from ' + WEIGHTS_PATH)
-        self.model.load_weights(WEIGHTS_PATH, by_name=True)
+        self.model.load_weights(WEIGHTS_PATH, by_name=True,
+                                exclude=["mrcnn_class_logits", "mrcnn_bbox_fc", "mrcnn_bbox"])
 
     def detect(self, image) -> list:
         if image is None:
@@ -49,7 +51,17 @@ class Segmentation:
 
 
 if __name__ == '__main__':
+    gpus = tf.config.experimental.list_physical_devices('GPU')
+    tf.config.experimental.set_memory_growth(gpus[0], True)
+    tf.config.experimental.set_virtual_device_configuration(gpus[0],
+                                                            [tf.config.experimental.VirtualDeviceConfiguration(
+                                                                memory_limit=8192)])
+
     init_logger()
     segmentation = Segmentation()
-    result = segmentation.detect('/home/xkovac/Documents/test.png')
-
+    img = cv2.imread('/home/xkovac/Documents/test.bmp')
+    result = segmentation.detect(img)
+    for i in range(len(result)):
+        print(result[i])
+    print(result)
+    print()

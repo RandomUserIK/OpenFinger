@@ -56,3 +56,7 @@ compile_commands.json
 
 # build
 build/
+
+# pycache
+neural_network/main/__pycache__/
+neural_network/main/mrcnn/__pycache__/
