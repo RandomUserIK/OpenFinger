@@ -40,17 +40,48 @@ namespace utility {
     }
 
     static inline af::array mat_double2array_double(const cv::Mat &inputMat) {
-        // TODO: is an additional check for double type really necessary?
         if (inputMat.type() != CV_64F) {
-            // TODO: replace QDebug with a logging library (easyLogging++)
-            qDebug() << QString("OpenCV Mat to AF Array: input image is not grayscale.\n");
-            throw std::invalid_argument("Input cv::Mat is of invalid type. Type required: CV_64F");
+            // TODO: replace QDebug with a logging library (e.g. easyLogging++)
+            qDebug() << QString("OpenCV Mat to AF Array: input image is not of type CV_64F.\n");
+            throw std::invalid_argument("Input cv::Mat is of invalid type. Required type: CV_64F");
         }
 
         std::vector<double> imgData(static_cast<unsigned long>(inputMat.rows * inputMat.cols));
         for (int col = 0; inputMat.cols; ++col) {
             for (int row = 0; inputMat.rows; ++row) {
                 imgData.emplace_back(inputMat.at<double>(row, col));
+            }
+        }
+        return af::array(inputMat.rows, inputMat.cols, imgData.data());
+    }
+
+    static inline af::array mat_float2array_float(const cv::Mat& inputMat) {
+        if (inputMat.type() != CV_32F) {
+            // TODO: replace QDebug with a logging library (e.g. easyLogging++)
+            qDebug() << QString("OpenCV Mat to AF Array: input image is not of type CV_32F.\n");
+            throw std::invalid_argument("Input cv::Mat is of invalid type. Required type: CV_32F");
+        }
+
+        std::vector<float> imgData(static_cast<unsigned long>(inputMat.rows * inputMat.cols));
+        for (int col = 0; inputMat.cols; ++col) {
+            for (int row = 0; inputMat.rows; ++row) {
+                imgData.emplace_back(inputMat.at<float>(row, col));
+            }
+        }
+        return af::array(inputMat.rows, inputMat.cols, imgData.data());
+    }
+
+    static inline af::array mat_uchar2array_float(const cv::Mat& inputMat) {
+        if (inputMat.type() != CV_8UC1) {
+            // TODO: replace QDebug with a logging library (e.g. easyLogging++)
+            qDebug() << QString("OpenCV Mat to AF Array: input image is not of type CV_8UC1.\n");
+            throw std::invalid_argument("Input cv::Mat is of invalid type. Required type: CV_8UC1");
+        }
+
+        std::vector<float> imgData(static_cast<unsigned long>(inputMat.rows * inputMat.cols));
+        for (int col = 0; inputMat.cols; ++col) {
+            for (int row = 0; inputMat.rows; ++row) {
+                imgData.emplace_back(inputMat.at<uchar>(row, col));
             }
         }
         return af::array(inputMat.rows, inputMat.cols, imgData.data());
@@ -65,7 +96,6 @@ namespace utility {
                                  static_cast<unsigned int>(inputArray.dims(1)));
         inputArray = 255 * ((inputArray.as(f32) - min) / (max - min));
     }
-
 }
 
 #endif //OPENFINGER_UTILITY_HPP
