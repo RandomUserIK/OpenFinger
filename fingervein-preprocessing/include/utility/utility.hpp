@@ -28,7 +28,7 @@ namespace utility {
             static inline cv::Mat array_float2mat_float(const af::array &inputArray) {
                 if (inputArray.type() != f32) {
                     // TODO: replace QDebug with a logging library (e.g. easyLogging++)
-                    qDebug() << QString("af::array to cv::Mat: input image is not grayscale.\n");
+                    qDebug() << QString("af::array to cv::Mat: input image is not of float type.\n");
                     throw std::invalid_argument("Input af::array is of invalid type. Type required: f32");
                 }
                 return copyAfArrayDataToCvMat<uchar>(inputArray, f32, CV_32F);
