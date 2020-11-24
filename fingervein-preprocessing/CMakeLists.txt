@@ -52,7 +52,7 @@ endif()
 
 set(PREPROCESSING_LIB_SOURCES
         src/preprocessing.cpp
-)
+        include/dependencies.hpp include/preprocessing/bilateralFiltering.hpp src/bilateralFiltering.cpp include/structures.hpp)
 add_library(fvpreprocessinglib SHARED ${PREPROCESSING_LIB_SOURCES})
 target_include_directories(fvpreprocessinglib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/)
 
