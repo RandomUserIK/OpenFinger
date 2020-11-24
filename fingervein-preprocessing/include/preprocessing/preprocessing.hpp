@@ -1,6 +1,8 @@
 #ifndef OPENFINGER_PREPROCESSING_HPP
 #define OPENFINGER_PREPROCESSING_HPP
 
+#include "dependencies.hpp"
+
 namespace fingervein {
 
 class Preprocessing {

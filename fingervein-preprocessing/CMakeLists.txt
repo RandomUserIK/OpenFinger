@@ -52,7 +52,7 @@ endif()
 
 set(PREPROCESSING_LIB_SOURCES
         src/preprocessing.cpp
-        include/utility/utility.hpp)
+        include/utility/utility.hpp include/dependencies.hpp)
 add_library(fvpreprocessinglib SHARED ${PREPROCESSING_LIB_SOURCES})
 target_include_directories(fvpreprocessinglib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/)
 
