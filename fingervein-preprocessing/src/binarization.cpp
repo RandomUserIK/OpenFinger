@@ -20,7 +20,7 @@ void fingervein::Binarization::setBinarizationParams(const fingervein::Binarizat
     binarizationParams = inputParams;
 }
 
-void fingervein::Binarization::performGaussianBlur() noexcept {
+void fingervein::Binarization::performGaussianBlur() {
     if (inputImg.empty())
         #pragma GCC diagnostic push
         #pragma GCC diagnostic ignored "-Wterminate"
@@ -34,7 +34,7 @@ void fingervein::Binarization::performGaussianBlur() noexcept {
                   binarizationParams.thresholdMaxValue, binarizationParams.thresholdType);
 }
 
-void fingervein::Binarization::performAdaptiveBinarization() noexcept {
+void fingervein::Binarization::performAdaptiveBinarization() {
     if (inputImg.empty())
         #pragma GCC diagnostic push
         #pragma GCC diagnostic ignored "-Wterminate"

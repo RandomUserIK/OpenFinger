@@ -10,9 +10,9 @@ namespace fingervein {
             Binarization();
             ~Binarization();
 
-            void performGaussianBlur() noexcept;
+            void performGaussianBlur();
 
-            void performAdaptiveBinarization() noexcept;
+            void performAdaptiveBinarization();
 
             void setInputImg(const cv::Mat &input);
 
