@@ -3,4 +3,6 @@
 
 #include "preprocessing/preprocessing.hpp"
 
+#include "preprocessing/contrastEnhancement.hpp"
+
 #endif //OPENFINGER_FINGERVEIN_PREPROCESSING_HPP
