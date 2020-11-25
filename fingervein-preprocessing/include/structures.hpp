@@ -8,9 +8,9 @@ namespace fingervein {
     // Contrast enhancement
     typedef struct {
         int distance;
+        int gaussianBlock;
         int gaussianBorderType;
         double gaussianSigmaXSuace;
-        double gaussianBlock;
         double gaussianSigmaX;
         double gaussianSigmaY;
         cv::Size gaussianKernelSize;

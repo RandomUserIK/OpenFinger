@@ -81,8 +81,8 @@ void fingervein::ContrastEnhancement::restoreDefaultParams() noexcept {
     contrastEnhancementParams.gaussianSigmaY = 0;
     contrastEnhancementParams.gaussianBlock = 3;
     contrastEnhancementParams.gaussianBorderType = cv::BORDER_DEFAULT;
-    contrastEnhancementParams.gaussianKernelSize = cv::Size(static_cast<int>(contrastEnhancementParams.gaussianBlock),
-                                                            static_cast<int>(contrastEnhancementParams.gaussianBlock));
+    contrastEnhancementParams.gaussianKernelSize = cv::Size(contrastEnhancementParams.gaussianBlock,
+                                                            contrastEnhancementParams.gaussianBlock);
 }
 
 void fingervein::ContrastEnhancement::clearImages() noexcept {
