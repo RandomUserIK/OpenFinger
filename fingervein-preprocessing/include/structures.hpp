@@ -13,11 +13,14 @@ namespace fingervein {
         int adaptiveType;
         int adaptiveMethod;
         int gaussianBorderType;
+        int thresholdType;
         cv::Size gaussianKernelSize;
         double gaussianSigmaX;
         double gaussianSigmaY;
         double adaptiveC;
         double adaptiveMaxValue;
+        double thresholdValue;
+        double thresholdMaxValue;
     } BinarizationParams;
 }
 

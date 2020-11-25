@@ -1,7 +1,52 @@
 #include "./include/preprocessing/binarization.hpp"
 
 fingervein::Binarization::Binarization() {
-    // TODO: add threshold params
+    restoreDefaultParams();
+}
+
+fingervein::Binarization::~Binarization() {
+    clearImages();
+}
+
+void fingervein::Binarization::setInputImg(const cv::Mat &input) {
+    if (!inputImg.empty() || !binarizedImg.empty())
+        clearImages();
+
+    inputImg = input;
+    binarizedImg = cv::Mat(inputImg.rows, inputImg.cols, inputImg.type());
+}
+
+void fingervein::Binarization::setBinarizationParams(const fingervein::BinarizationParams &inputParams) {
+    binarizationParams = inputParams;
+}
+
+void fingervein::Binarization::performGaussianBlur() noexcept {
+    if (inputImg.empty())
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wterminate"
+        throw std::runtime_error("Input image was not set!\n");
+        #pragma GCC diagnostic pop
+
+    cv::GaussianBlur(inputImg, binarizedImg, binarizationParams.gaussianKernelSize,
+                     binarizationParams.gaussianSigmaX, binarizationParams.gaussianSigmaY,
+                     binarizationParams.gaussianBorderType);
+    cv::threshold(binarizedImg, binarizedImg, binarizationParams.thresholdValue,
+                  binarizationParams.thresholdMaxValue, binarizationParams.thresholdType);
+}
+
+void fingervein::Binarization::performAdaptiveBinarization() noexcept {
+    if (inputImg.empty())
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wterminate"
+        throw std::runtime_error("Input image was not set!\n");
+        #pragma GCC diagnostic pop
+
+    cv::adaptiveThreshold(inputImg, binarizedImg, binarizationParams.adaptiveMaxValue,
+                          binarizationParams.adaptiveMethod,binarizationParams.adaptiveType,
+                          binarizationParams.adaptiveBlockSize, binarizationParams.adaptiveC);
+}
+
+void fingervein::Binarization::restoreDefaultParams() noexcept {
     binarizationParams.holeSize = 20;
     binarizationParams.adaptiveBlockSize = 47;
     binarizationParams.adaptiveMaxValue = 255;
@@ -11,52 +56,13 @@ fingervein::Binarization::Binarization() {
     binarizationParams.gaussianBorderType = cv::BORDER_DEFAULT;
     binarizationParams.gaussianSigmaX = 1;
     binarizationParams.gaussianSigmaY = 0;
-    binarizationParams.gaussianKernelSize = cv::Size(3,3);
+    binarizationParams.gaussianKernelSize = cv::Size(3, 3);
+    binarizationParams.thresholdMaxValue = 255;
+    binarizationParams.thresholdValue = 0;
+    binarizationParams.thresholdType = cv::THRESH_BINARY + cv::THRESH_OTSU;
 }
 
-fingervein::Binarization::~Binarization() {
-    clearParams();
-    clearResults();
-}
-
-void fingervein::Binarization::setInputImg(const cv::Mat &input) {
-    inputImg = input;
-    binarizedImg = cv::Mat(inputImg.rows, inputImg.cols, inputImg.type());
-}
-
-void fingervein::Binarization::setBinarizationParams(const fingervein::BinarizationParams &inputParams) {
-    // TODO: input check
-    binarizationParams = inputParams;
-}
-
-void fingervein::Binarization::performGaussianBlur() noexcept {
-
-}
-
-void fingervein::Binarization::performAdaptiveBinarization() noexcept {
-
-}
-
-void fingervein::Binarization::removeBackground() noexcept {
-
-}
-
-void fingervein::Binarization::clearParams() noexcept {
-    // TODO: clear or restore defaults?
-    binarizationParams.holeSize = 0;
-    binarizationParams.adaptiveBlockSize = 0;
-    binarizationParams.adaptiveMaxValue = 0;
-    binarizationParams.adaptiveMethod = 0;
-    binarizationParams.adaptiveType = 0;
-    binarizationParams.adaptiveC = 0;
-    binarizationParams.gaussianBorderType = 0;
-    binarizationParams.gaussianSigmaX = 0;
-    binarizationParams.gaussianSigmaY = 0;
-    binarizationParams.gaussianKernelSize = cv::Size(0,0);
-}
-
-void fingervein::Binarization::clearResults() noexcept {
-    // TODO: find a more appropriate name for this method
+void fingervein::Binarization::clearImages() noexcept {
     inputImg.release();
     binarizedImg.release();
 }

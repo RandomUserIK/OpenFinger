@@ -23,9 +23,8 @@ namespace fingervein {
             cv::Mat binarizedImg;
             fingervein::BinarizationParams binarizationParams;
 
-            void removeBackground() noexcept;
-            void clearParams() noexcept;
-            void clearResults() noexcept;
+            void restoreDefaultParams() noexcept;
+            void clearImages() noexcept;
     };
 
 }
