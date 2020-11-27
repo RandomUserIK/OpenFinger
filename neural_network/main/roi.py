@@ -180,7 +180,7 @@ def train(model):
 
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
-                epochs=50,
+                epochs=20,
                 layers='heads')
 
 
@@ -274,7 +274,7 @@ if __name__ == '__main__':
                         help="'train' or 'splash'", nargs='?', default='train')
     parser.add_argument('--dataset', required=False,
                         metavar="/path/to/roi/dataset/",
-                        help='Directory of the ROI dataset', default='/home/xkovac/Documents/FV Databases/All Images/dataset')
+                        help='Directory of the ROI dataset', default='/home/xkovac/Documents/dataset')
     parser.add_argument('--weights', required=False,
                         metavar="/path/to/weights.h5",
                         help="Path to weights .h5 file or 'coco'", default='coco')

@@ -8,40 +8,40 @@ import cv2
 
 ROOT_DIR = os.getcwd()
 MODEL_DIR = os.path.join(ROOT_DIR, 'logs/')
-WEIGHTS_PATH = os.path.join(ROOT_DIR, 'mask_rcnn_roi.h5')
+WEIGHTS_PATH = os.path.join(ROOT_DIR, 'mask_rcnn_coco.h5')
 DEVICE = '/gpu:0'
 MODE = 'inference'
-
-config = roi.Config()
 
 
 def init_logger():
     logging.basicConfig(stream=sys.stdout, level=logging.INFO, format='\n%(message)s')
 
 
-class InferenceConfig(config.__class__):
+class InferenceConfig(roi.RoiConfig):
     GPU_COUNT = 1
     IMAGES_PER_GPU = 1
+
+
+config = InferenceConfig()
+config.display()
 
 
 class Segmentation:
 
     def __init__(self) -> None:
         self.model = None
-        self.config = InferenceConfig()
-        self.config.NAME = 'roi'
         self.init_model()
 
     def init_model(self) -> None:
         logging.info('Initializing the model')
         with tf.device(DEVICE):
-            self.model = mrcnn_model.MaskRCNN(mode=MODE, model_dir=MODEL_DIR, config=self.config)
+            self.model = mrcnn_model.MaskRCNN(mode=MODE, model_dir=MODEL_DIR, config=config)
             self.load_weights()
+            print()
 
     def load_weights(self) -> None:
-        # logging.info('Loading weights from ' + WEIGHTS_PATH)
-        self.model.load_weights(WEIGHTS_PATH, by_name=True,
-                                exclude=["mrcnn_class_logits", "mrcnn_bbox_fc", "mrcnn_bbox"])
+        logging.info('Loading weights from ' + WEIGHTS_PATH)
+        self.model.load_weights(WEIGHTS_PATH, by_name=True)
 
     def detect(self, image) -> list:
         if image is None:

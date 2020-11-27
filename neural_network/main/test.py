@@ -13,7 +13,7 @@ import matplotlib.patches as patches
 # Root directory of the project
 ROOT_DIR = os.getcwd()
 
-import utils
+import mrcnn.utils
 import mrcnn
 from mrcnn.visualize import display_images
 import mrcnn.model as modellib
