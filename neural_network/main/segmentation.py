@@ -3,12 +3,13 @@ import sys
 import logging
 import tensorflow as tf
 import mrcnn.model as mrcnn_model
+import mrcnn.visualize as visualize
 import roi
 import cv2
 
 ROOT_DIR = os.getcwd()
 MODEL_DIR = os.path.join(ROOT_DIR, 'logs/')
-WEIGHTS_PATH = os.path.join(ROOT_DIR, 'mask_rcnn_coco.h5')
+WEIGHTS_PATH = os.path.join(ROOT_DIR, 'mask_rcnn_roi_0020.h5')
 DEVICE = '/gpu:0'
 MODE = 'inference'
 
@@ -51,17 +52,20 @@ class Segmentation:
 
 
 if __name__ == '__main__':
-    gpus = tf.config.experimental.list_physical_devices('GPU')
-    tf.config.experimental.set_memory_growth(gpus[0], True)
-    tf.config.experimental.set_virtual_device_configuration(gpus[0],
-                                                            [tf.config.experimental.VirtualDeviceConfiguration(
-                                                                memory_limit=8192)])
+    # gpus = tf.config.experimental.list_physical_devices('GPU')
+    # tf.config.experimental.set_memory_growth(gpus[0], True)
+    # tf.config.experimental.set_virtual_device_configuration(gpus[0],
+    #                                                         [tf.config.experimental.VirtualDeviceConfiguration(
+    #                                                             memory_limit=8192)])
 
     init_logger()
     segmentation = Segmentation()
-    img = cv2.imread('/home/xkovac/Documents/test.bmp')
+    img = cv2.imread('/home/xkovac/Documents/PLUS-FV3-LED_PALMAR_01_002_09_01.png')
     result = segmentation.detect(img)
-    for i in range(len(result)):
-        print(result[i])
-    print(result)
-    print()
+    r = result[0]
+    visualize.display_instances(img, r['rois'], r['masks'], r['class_ids'],
+                                ['background', 'roi'], r['scores'])
+    # for i in range(len(result)):
+    #     print(result[i])
+    # print(result)
+    # print()
