@@ -7,26 +7,26 @@
 namespace fingervein {
 
     class BilateralFiltering {
-        public:
-            explicit BilateralFiltering();
-            ~BilateralFiltering();
+      public:
+        BilateralFiltering();
+        ~BilateralFiltering();
 
-            cv::Mat applyBilateralFilter();
+        cv::Mat applyBilateralFilter();
 
-            void setOriginalImg(const cv::Mat &originalImg) noexcept;
-            void setBilateralFilterParams(const BilateralFilterParams &bilateralFilterParams) noexcept;
+        void setOriginalImg(const cv::Mat &originalImg) noexcept;
+        void setBilateralFilterParams(const BilateralFilterParams &bilateralFilterParams) noexcept;
 
-        private:
-            cv::Mat originalImg;
-            cv::Mat blurredImg;
+      private:
+        cv::Mat m_originalImg;
+        cv::Mat m_blurredImg;
 
-            fingervein::BilateralFilterParams bilateralFilterParams;
+        fingervein::BilateralFilterParams m_bilateralFilterParams {};
 
-            void applyBilateralMultipleTimes() noexcept;
-            void clearParams() noexcept;
-            void clearResults() noexcept;
+        void applyBilateralMultipleTimes() noexcept;
+        void clearParams() noexcept;
+        void clearResults() noexcept;
     };
 
-}
+} // namespace fingervein
 
 #endif //OPENFINGER_BILATERALFILTERING_HPP

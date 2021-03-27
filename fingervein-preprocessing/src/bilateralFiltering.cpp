@@ -1,11 +1,11 @@
 #include "./include/preprocessing/bilateralFiltering.hpp"
 
 fingervein::BilateralFiltering::BilateralFiltering() {
-    bilateralFilterParams.diameter = 10;
-    bilateralFilterParams.borderType = cv::BORDER_DEFAULT;
-    bilateralFilterParams.timesApplied = 3;
-    bilateralFilterParams.sigmaColor = 10;
-    bilateralFilterParams.sigmaSpace = 3;
+    m_bilateralFilterParams.diameter = 10;
+    m_bilateralFilterParams.borderType = cv::BORDER_DEFAULT;
+    m_bilateralFilterParams.timesApplied = 3;
+    m_bilateralFilterParams.sigmaColor = 10;
+    m_bilateralFilterParams.sigmaSpace = 3;
 
     clearResults();
 }
@@ -16,72 +16,72 @@ fingervein::BilateralFiltering::~BilateralFiltering() {
 }
 
 cv::Mat fingervein::BilateralFiltering::applyBilateralFilter() {
-    if (bilateralFilterParams.timesApplied < 1)
+    if (m_bilateralFilterParams.timesApplied < 1)
         throw std::invalid_argument("\nBilateral filter must be applied at least once!\n");
 
-    if (bilateralFilterParams.timesApplied == 1) {
-        cv::bilateralFilter(originalImg, blurredImg,
-                            bilateralFilterParams.diameter,
-                            bilateralFilterParams.sigmaColor,
-                            bilateralFilterParams.sigmaSpace,
-                            bilateralFilterParams.borderType);
-        return blurredImg;
+    if (m_bilateralFilterParams.timesApplied == 1) {
+        cv::bilateralFilter(m_originalImg, m_blurredImg,
+                            m_bilateralFilterParams.diameter,
+                            m_bilateralFilterParams.sigmaColor,
+                            m_bilateralFilterParams.sigmaSpace,
+                            m_bilateralFilterParams.borderType);
+        return m_blurredImg;
     }
 
     applyBilateralMultipleTimes();
-    return blurredImg;
+    return m_blurredImg;
 }
 
 void fingervein::BilateralFiltering::applyBilateralMultipleTimes() noexcept {
-    cv::Mat intermediateFirst = cv::Mat(originalImg.rows, originalImg.cols, originalImg.type());
-    cv::Mat intermediateSecond = cv::Mat(originalImg.rows, originalImg.cols, originalImg.type());
+    cv::Mat intermediateFirst = cv::Mat(m_originalImg.rows, m_originalImg.cols, m_originalImg.type());
+    cv::Mat intermediateSecond = cv::Mat(m_originalImg.rows, m_originalImg.cols, m_originalImg.type());
 
     intermediateFirst.setTo(0);
     intermediateSecond.setTo(0);
 
-    cv::bilateralFilter(originalImg, intermediateFirst,
-                        bilateralFilterParams.diameter,
-                        bilateralFilterParams.sigmaColor,
-                        bilateralFilterParams.sigmaSpace,
-                        bilateralFilterParams.borderType);
+    cv::bilateralFilter(m_originalImg, intermediateFirst,
+                        m_bilateralFilterParams.diameter,
+                        m_bilateralFilterParams.sigmaColor,
+                        m_bilateralFilterParams.sigmaSpace,
+                        m_bilateralFilterParams.borderType);
 
-    for (int i = 0; i < bilateralFilterParams.timesApplied; ++i) {
+    for (int i = 0; i < m_bilateralFilterParams.timesApplied; ++i) {
         cv::bilateralFilter(intermediateFirst, intermediateSecond,
-                            bilateralFilterParams.diameter,
-                            bilateralFilterParams.sigmaColor,
-                            bilateralFilterParams.sigmaSpace,
-                            bilateralFilterParams.borderType);
+                            m_bilateralFilterParams.diameter,
+                            m_bilateralFilterParams.sigmaColor,
+                            m_bilateralFilterParams.sigmaSpace,
+                            m_bilateralFilterParams.borderType);
 
         intermediateFirst.setTo(0);
         intermediateFirst(intermediateSecond);
         intermediateSecond.setTo(0);
     }
 
-    blurredImg(intermediateFirst);
+    m_blurredImg(intermediateFirst);
     intermediateFirst.release();
     intermediateSecond.release();
 }
 
 void fingervein::BilateralFiltering::clearParams() noexcept {
-    bilateralFilterParams.diameter = 0;
-    bilateralFilterParams.borderType = cv::BORDER_DEFAULT;
-    bilateralFilterParams.timesApplied = 1;
-    bilateralFilterParams.sigmaColor = 0;
-    bilateralFilterParams.sigmaSpace = 0;
+    m_bilateralFilterParams.diameter = 0;
+    m_bilateralFilterParams.borderType = cv::BORDER_DEFAULT;
+    m_bilateralFilterParams.timesApplied = 1;
+    m_bilateralFilterParams.sigmaColor = 0;
+    m_bilateralFilterParams.sigmaSpace = 0;
 }
 
 void fingervein::BilateralFiltering::clearResults() noexcept {
-    originalImg.release();
-    blurredImg.release();
+    m_originalImg.release();
+    m_blurredImg.release();
 }
 
 void fingervein::BilateralFiltering::setOriginalImg(const cv::Mat &inputImg) noexcept {
-    originalImg = inputImg;
+    m_originalImg = inputImg;
 }
 
 void fingervein::BilateralFiltering::setBilateralFilterParams(
         const fingervein::BilateralFilterParams &inputParams) noexcept {
-    bilateralFilterParams = inputParams;
+    m_bilateralFilterParams = inputParams;
 }
 
 
