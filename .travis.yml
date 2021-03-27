@@ -23,9 +23,9 @@ script:
 branches:
   only:
     - dev
-    - /^feature/*$\
-    - /^refactor/*$\
-    - /^fix/*$\
+    - /^feature/*$/
+    - /^refactor/*$/
+    - /^fix/*$/
 
 notifications:
   email: false
